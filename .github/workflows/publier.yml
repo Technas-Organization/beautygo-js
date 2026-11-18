@@ -1,0 +1,28 @@
+# Publie @beautygo/site sur npm à chaque tag vX.Y.Z, sans jeton stocké :
+# npm fait confiance à CE workflow (trusted publishing, OIDC). Dépôt public :
+# machines de GitHub (ubuntu-latest), jamais les runners du cluster.
+name: Publier sur npm
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+      # Le trusted publishing demande npm 11.5.1 ou plus.
+      - run: npm install -g npm@11
+      - run: npm test
+      - name: La version du tag est celle du paquet
+        run: test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"
+      - run: npm publish --provenance --access public

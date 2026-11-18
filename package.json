@@ -1,0 +1,43 @@
+{
+  "name": "@beautygo/site",
+  "version": "0.1.0",
+  "description": "Show a BeautyGo professional or salon (services, prices, team, slots, portfolio, reviews) on your own website, with your own design.",
+  "keywords": [
+    "beautygo",
+    "booking",
+    "salon",
+    "beauty",
+    "appointments",
+    "nextjs"
+  ],
+  "homepage": "https://beautygo.fr/developpeurs/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Technas-Organization/beautygo-js.git"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
