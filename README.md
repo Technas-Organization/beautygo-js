@@ -8,6 +8,10 @@ live services and prices, opening hours, free slots, portfolio, reviews, offers,
 the products of their shop. You design everything, in your own design, on your own domain name.
 No interface is imposed. It works with Next.js, React or plain JavaScript.
 
+Most salon booking tools give a website a "Book now" button or a booking window in their own look.
+This package gives you the data instead: every section of the site is yours, and only the final
+booking or payment step happens on BeautyGo.
+
 For online booking, your button opens the pro's BeautyGo booking flow, with the chosen service
 already selected (the app if the client has it, the web otherwise). Account, payment and
 reminders happen there. For products, your site has its own cart, and "Pay" opens the order in

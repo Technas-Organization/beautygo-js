@@ -7,6 +7,10 @@ donne ses données, toujours à jour : fiche, prestations et prix, horaires, cr�
 portfolio, avis, et les articles de sa boutique. Tu dessines tout, sur ton nom de domaine.
 Aucune interface n'est imposée.
 
+La plupart des outils de réservation donnent au site un bouton « Réserver » ou une fenêtre de
+réservation à leurs couleurs. Ce paquet te donne les données : chaque section du site est à toi,
+seule la dernière étape (réserver, payer) se passe sur BeautyGo.
+
 Pour réserver, ton bouton ouvre la réservation BeautyGo de la pro, déjà sur la prestation
 choisie (l'app si la cliente l'a, sinon le web) : le compte, le paiement et les rappels se
 passent là. Pour les articles, ton site a son panier, et « Payer » ouvre la commande dans
