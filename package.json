@@ -1,14 +1,16 @@
 {
   "name": "@beautygo/site",
-  "version": "0.1.0",
-  "description": "Show a BeautyGo professional or salon (services, prices, team, slots, portfolio, reviews) on your own website, with your own design.",
+  "version": "0.3.0",
+  "description": "Show a BeautyGo professional or salon (services, prices, team, slots, portfolio, reviews, shop products) on your own website, with your own design and your own cart.",
   "keywords": [
     "beautygo",
     "booking",
     "salon",
     "beauty",
     "appointments",
-    "nextjs"
+    "nextjs",
+    "shop",
+    "cart"
   ],
   "homepage": "https://beautygo.fr/developpeurs/",
   "repository": {
@@ -27,6 +29,7 @@
   },
   "files": [
     "src",
+    "skills",
     "README.md",
     "LICENSE"
   ],
