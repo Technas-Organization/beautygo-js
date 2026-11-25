@@ -373,7 +373,10 @@ follows to build a salon's website right the first time. It says what to decide 
 check before saying "done".
 
 ```bash
-# Copy the folder to where your coding assistant reads its skills:
+# Installs the skill for your coding assistant (it asks which one):
+npx skills add Technas-Organization/beautygo-js --skill site-de-salon
+
+# Or copy the folder to where your coding assistant reads its skills:
 cp -R node_modules/@beautygo/site/skills/site-de-salon <skills-folder>/
 ```
 

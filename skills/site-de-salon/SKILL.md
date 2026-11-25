@@ -1,6 +1,6 @@
 ---
 name: site-de-salon
-description: Créer le site vitrine d'un salon de beauté ou d'une pro (coiffure, tresses, ongles, cils, barbier, esthétique) branché sur BeautyGo avec le paquet @beautygo/site. Prestations, créneaux, offres, boutique, carte cadeau et avis restent à jour tout seuls. À charger dès qu'on demande « le site d'un salon », « un site pour ma cliente coiffeuse », ou qu'un projet contient une clé qui commence par bgo_pk_.
+description: Build the website of a beauty salon or beauty professional (hair, braids, nails, lashes, barber, aesthetics) connected to BeautyGo with the npm package @beautygo/site, in Next.js, React or plain JavaScript: live services, prices, online booking, offers, gift cards, shop and reviews stay up to date on their own, with the salon's own design. Use it when someone asks for a salon website, a hair or nail salon site with online booking, « le site d'un salon », « un site pour ma cliente coiffeuse », or when a project contains a key starting with bgo_pk_. The instructions are in French.
 ---
 
 # Le site d'un salon, branché sur BeautyGo

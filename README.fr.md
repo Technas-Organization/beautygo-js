@@ -371,7 +371,10 @@ de code fasse le site d'un salon du premier coup. Il dit quoi décider avant d'�
 vérifier avant de dire « fini ».
 
 ```bash
-# Copie le dossier là où ton assistant de code lit ses skills :
+# Installe le skill pour ton assistant de code (il demande lequel) :
+npx skills add Technas-Organization/beautygo-js --skill site-de-salon
+
+# Ou copie le dossier là où ton assistant de code lit ses skills :
 cp -R node_modules/@beautygo/site/skills/site-de-salon <dossier-des-skills>/
 ```
 
