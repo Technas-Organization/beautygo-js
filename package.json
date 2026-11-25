@@ -1,18 +1,28 @@
 {
   "name": "@beautygo/site",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Show a BeautyGo professional or salon (services, prices, team, slots, portfolio, reviews, shop products) on your own website, with your own design and your own cart.",
   "keywords": [
     "beautygo",
     "booking",
-    "salon",
-    "beauty",
+    "online-booking",
     "appointments",
+    "salon",
+    "beauty-salon",
+    "salon-website",
+    "hair-salon",
+    "nail-salon",
+    "lashes",
+    "barber",
+    "gift-card",
+    "beauty",
     "nextjs",
+    "react",
     "shop",
-    "cart"
+    "cart",
+    "agent-skills"
   ],
-  "homepage": "https://beautygo.fr/developpeurs/",
+  "homepage": "https://beautygo.fr/en/developers/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Technas-Organization/beautygo-js.git"
@@ -31,6 +41,7 @@
     "src",
     "skills",
     "README.md",
+    "README.fr.md",
     "LICENSE"
   ],
   "sideEffects": false,

@@ -1,48 +1,51 @@
-# BeautyGo sur ton site
+[Français](./README.fr.md)
 
-Tu fais le site d'une pro de la beauté ou d'un salon qui utilise BeautyGo. Ce paquet te
-donne ses données, toujours à jour : fiche, prestations et prix, horaires, créneaux libres,
-portfolio, avis, et les articles de sa boutique. Tu dessines tout, sur ton nom de domaine.
-Aucune interface n'est imposée.
+# BeautyGo on your website
 
-Pour réserver, ton bouton ouvre la réservation BeautyGo de la pro, déjà sur la prestation
-choisie (l'app si la cliente l'a, sinon le web) : le compte, le paiement et les rappels se
-passent là. Pour les articles, ton site a son panier, et « Payer » ouvre la commande dans
-BeautyGo, le panier déjà rempli.
+You are building the website of a beauty professional (hair, nails, lashes and more) or of a
+beauty salon that uses BeautyGo. This package gives you their data, always up to date: profile,
+live services and prices, opening hours, free slots, portfolio, reviews, offers, gift cards and
+the products of their shop. You design everything, in your own design, on your own domain name.
+No interface is imposed. It works with Next.js, React or plain JavaScript.
+
+For online booking, your button opens the pro's BeautyGo booking flow, with the chosen service
+already selected (the app if the client has it, the web otherwise). Account, payment and
+reminders happen there. For products, your site has its own cart, and "Pay" opens the order in
+BeautyGo with the cart already filled.
 
 ```bash
 npm install @beautygo/site
 ```
 
-## 1. La clé
+## 1. The key
 
-**Pour tester tout de suite**, sans attendre ta cliente : la clé de démonstration
-`bgo_pk_test_uDyKYsZsv6Fu6bhif0XKUgrK`. Elle lit le Studio Azur, un studio de démonstration (prestations, horaires,
-créneaux, articles, dont un épuisé, « Réserver » et « Payer » ouverts). Elle répond depuis ton serveur et depuis n'importe quelle
-page, même un fichier ouvert d'un double clic. Ensuite, passe à la clé de ta cliente : le code ne change pas.
+**To test right away**, without waiting for your client: use the demo key
+`bgo_pk_test_uDyKYsZsv6Fu6bhif0XKUgrK`. It reads Studio Azur, a demo studio (services, hours,
+slots, products including one sold out, "Book" and "Pay" open). It answers from your server and from any
+page, even a file opened with a double click. Then switch to your client's key: the code does not change.
 
-C'est la pro qui relie ton site, dans l'app BeautyGo Pro : **Profil, Mon site, Site fait
-par un développeur**. Elle tape l'adresse du site et te donne la clé affichée
+The pro links your site in the BeautyGo Pro app: **Profile, My website, Site built by a
+developer**. They type the site's address and give you the key shown
 (`bgo_pk_…`).
 
-- Il faut au moins la formule Essentiel. Rien à payer pour toi.
-- Une pro a un seul site relié. En relier un autre remplace le premier.
-- La clé est publique. Elle ne lit que cette pro. Dans un navigateur, elle ne répond que
-  depuis le domaine relié (avec ou sans `www`) et depuis `localhost` pour développer.
+- The Essentiel plan or higher is required. You pay nothing.
+- A pro has only one linked site. Linking another one replaces the first.
+- The key is public. It only reads this pro. In a browser, it only answers from the linked
+  domain (with or without `www`) and from `localhost` for development.
 
-### Un salon
+### A salon
 
-Pour un salon, c'est la propriétaire qui relie le site : **Salon, Profil, Site fait par un
-développeur**. Il faut que l'abonnement du salon soit actif. La clé a la même forme, et
-les réponses aussi, avec trois différences :
+For a salon, the owner links the site: **Salon, Profile, Site built by a
+developer**. The salon's subscription must be active. The key has the same format, and so do
+the responses, with three differences:
 
-- `provider.type` vaut `salon` (`pro` pour une pro), et `provider.team` liste l'équipe
-  (nom, pseudo, photo, note) ;
-- `slots()` demande `serviceId` : au salon, les créneaux dépendent de qui fait la
-  prestation ;
-- `hours()` répond `no_salon_hours` : chaque pro de l'équipe a ses horaires.
+- `provider.type` is `salon` (`pro` for a pro), and `provider.team` lists the team
+  (name, handle, photo, rating);
+- `slots()` requires `serviceId`: in a salon, slots depend on who performs the
+  service;
+- `hours()` returns `no_salon_hours`: each pro on the team has their own hours.
 
-« Réserver » ouvre la page du salon dans BeautyGo, sur la prestation choisie.
+"Book" opens the salon's page in BeautyGo, on the chosen service.
 
 ## 2. Next.js (App Router)
 
@@ -54,7 +57,7 @@ export const beautygo = createBeautyGo({ key: process.env.NEXT_PUBLIC_BEAUTYGO_K
 ```
 
 ```jsx
-// app/page.jsx : rendu côté serveur, rafraîchi toutes les 5 minutes
+// app/page.jsx: server-side rendering, refreshed every 5 minutes
 import { beautygo } from '@/lib/beautygo';
 
 export default async function Page() {
@@ -67,8 +70,8 @@ export default async function Page() {
       <ul>
         {site.services.map((s) => (
           <li key={s.id}>
-            {s.name} · {s.price ?? `${s.price_min} à ${s.price_max}`} {s.currency} · {s.duration_minutes} min
-            {s.booking_url && <a href={s.booking_url}>Réserver</a>}
+            {s.name} · {s.price ?? `${s.price_min} to ${s.price_max}`} {s.currency} · {s.duration_minutes} min
+            {s.booking_url && <a href={s.booking_url}>Book</a>}
           </li>
         ))}
       </ul>
@@ -79,7 +82,7 @@ export default async function Page() {
 }
 ```
 
-Les créneaux changent vite : lis-les dans le navigateur.
+Slots change quickly: read them in the browser.
 
 ```jsx
 'use client';
@@ -91,9 +94,9 @@ export function Creneaux({ site, serviceId, jour }) {
   useEffect(() => {
     beautygo.slots({ date: jour, serviceId }).then((r) => setSlots(r.slots));
   }, [serviceId, jour]);
-  if (!slots) return <p>Chargement…</p>;
-  if (slots.length === 0) return <p>Aucun créneau ce jour-là.</p>;
-  // Avec le créneau, la réservation s'ouvre déjà sur ce jour et cette heure.
+  if (!slots) return <p>Loading…</p>;
+  if (slots.length === 0) return <p>No slots that day.</p>;
+  // With the slot, booking already opens on this day and time.
   return (
     <ul>
       {slots.map((c) => (
@@ -106,27 +109,27 @@ export function Creneaux({ site, serviceId, jour }) {
 }
 ```
 
-### L'adresse, la carte et le contact
+### Address, map and contact
 
-`provider.address` n'est rempli que pour un salon qui affiche son adresse. `provider.location`
-donne de quoi la poser sur une carte : exactement ce que la carte de BeautyGo montre à une
-visiteuse. `precise` vaut `true` pour un salon affiché ; sinon le point est le centre de sa
-zone (environ 1 km) : dessine une zone, pas une épingle. Une pro qui reçoit chez elle n'est
-jamais située plus finement. Le téléphone et l'e-mail ne sont jamais publics : pour la
-contacter, `provider.contact_url` ouvre la discussion avec elle dans BeautyGo (la visiteuse se
-connecte d'abord si elle n'a pas de compte, puis la discussion s'ouvre seule),
-`provider.profile_url` sa page, et `provider.social_links` donne ses réseaux. Un salon :
-`contact_url` ouvre sa conversation, et vaut `null` tant qu'il n'est pas publié.
+`provider.address` is only filled for a salon that displays its address. `provider.location`
+gives you what you need to place it on a map: exactly what the BeautyGo map shows to a
+visitor. `precise` is `true` for a displayed salon; otherwise the point is the center of their
+area (about 1 km): draw an area, not a pin. A pro who works from home is never located more
+precisely. Phone number and email are never public. To contact the pro,
+`provider.contact_url` opens a conversation with them in BeautyGo (the visitor signs in first
+if they have no account, then the conversation opens on its own),
+`provider.profile_url` opens their page, and `provider.social_links` gives their social networks. For a salon,
+`contact_url` opens its conversation, and is `null` as long as the salon is not published.
 
-### Les articles et le panier
+### Products and the cart
 
-`site.products` liste ce que sa boutique vend : nom, marque, description, contenance, prix et
-devise, photos, `available` (en vente et en stock) et `max_quantity` (ce qu'une commande peut
-prendre : son stock quand il est suivi, 99 sinon). Pour un salon, ce sont les articles des pros
-de l'équipe. La liste est vide quand la boutique est fermée ou en pause.
+`site.products` lists what their shop sells: name, brand, description, size, price and
+currency, photos, `available` (on sale and in stock) and `max_quantity` (what one order can
+take: the stock when it is tracked, 99 otherwise). For a salon, these are the products of the
+team's pros. The list is empty when the shop is closed or paused.
 
-Le panier vit sur ton site, rien ne part chez BeautyGo avant « Payer ». Le paquet le borne au
-stock et le garde dans le navigateur (`localStorage`, un panier par clé).
+The cart lives on your site. Nothing goes to BeautyGo before "Pay". The package caps it at the
+stock and keeps it in the browser (`localStorage`, one cart per key).
 
 ```jsx
 'use client';
@@ -146,14 +149,14 @@ export function Boutique({ site }) {
           <h3>{p.name}</h3>
           <p>{p.price} {p.currency}</p>
           <button disabled={!p.available} onClick={() => panier.add(p.id)}>
-            {p.available ? 'Ajouter au panier' : 'Épuisé'}
+            {p.available ? 'Add to cart' : 'Sold out'}
           </button>
-          <a href={p.product_url}>Voir sur BeautyGo</a>
+          <a href={p.product_url}>View on BeautyGo</a>
         </article>
       ))}
       {panier.count > 0 && (
         <a href={panier.checkoutUrl()}>
-          Payer {panier.totals.map((t) => `${t.amount} ${t.currency}`).join(' + ')}
+          Pay {panier.totals.map((t) => `${t.amount} ${t.currency}`).join(' + ')}
         </a>
       )}
     </>
@@ -161,36 +164,36 @@ export function Boutique({ site }) {
 }
 ```
 
-« Payer » ouvre la commande dans BeautyGo, ces articles dedans. BeautyGo relit les prix et le
-stock, demande le compte si besoin, et la cliente choisit quand passer chercher sa commande
-chez la pro, qui la confirme. Le panier BeautyGo de la cliente n'est pas touché. Pour un salon dont les
-articles viennent de plusieurs pros, ils vont dans son panier BeautyGo, une commande par pro.
+"Pay" opens the order in BeautyGo with these products in it. BeautyGo checks prices and
+stock again, asks for an account if needed, and the client chooses when to pick up the order
+at the pro's, who confirms it. The client's own BeautyGo cart is not touched. For a salon whose
+products come from several pros, they go into the client's BeautyGo cart, one order per pro.
 
-Une prestation et ses produits sur le même rendez-vous (une pro, pas un salon) :
+A service and its products on the same appointment (a pro, not a salon):
 
 ```js
 beautygo.bookingUrl(site, { serviceId, slot, products: panier });
-// ou, depuis le panier :
+// or, from the cart:
 panier.checkoutUrl({ serviceId, slot });
 ```
 
-Tu gères ton panier toi-même ? `checkoutUrl(site, { [productId]: quantité })` rend la même
-adresse, bornée de la même façon.
+Do you manage your own cart? `checkoutUrl(site, { [productId]: quantity })` returns the same
+address, capped the same way.
 
-### Ses offres et sa carte cadeau
+### Offers and gift card
 
-`site.offers` liste ses offres en cours, celles que sa page BeautyGo montre : fidélité,
-heures creuses, dernière minute, parrainage, venir à plusieurs… Chacune arrive avec sa
-promesse déjà écrite, dans la langue de la visiteuse (`title`, `sentence`, `conditions`),
-la remise la plus forte pour un badge (`percent`) et les prestations visées (`service_ids`).
-N'écris jamais une remise toi-même : la pro gère ses offres dans BeautyGo, qui les applique
-quand la cliente réserve par `booking_url`. Un créneau d'heures creuses ou de dernière minute
-porte sa remise (`slot.discount_percent`), calculée par BeautyGo : affiche « −15 % » dessus.
+`site.offers` lists their current offers, the ones their BeautyGo page shows: loyalty,
+off-peak hours, last minute, referral, coming as a group… Each one comes with its
+promise already written, in the visitor's language (`title`, `sentence`, `conditions`),
+the highest discount for a badge (`percent`) and the targeted services (`service_ids`).
+Never write a discount yourself: the pro manages their offers in BeautyGo, which applies them
+when the client books through `booking_url`. An off-peak or last-minute slot
+carries its discount (`slot.discount_percent`), computed by BeautyGo: show "−15 %" on it.
 
-`site.gift_card.url` ouvre sa page « Offrir » : on y paie une prestation à offrir, la personne
-qui la reçoit la réserve plus tard. `available` est faux quand elle n'encaisse pas en ligne
-(`reason` dit pourquoi) : cache alors le bouton. Sur une prestation, `giftCardUrl(site,
-{ serviceId })` ouvre la même page, cette prestation déjà cochée.
+`site.gift_card.url` opens their "Gift" page: someone pays for a service as a gift, and the person
+who receives it books it later. `available` is false when the pro does not take payments online
+(`reason` says why): hide the button then. On a service, `giftCardUrl(site,
+{ serviceId })` opens the same page with this service already selected.
 
 ```jsx
 {site.offers.map((o) => (
@@ -199,72 +202,73 @@ qui la reçoit la réserve plus tard. `available` est faux quand elle n'encaisse
     {o.conditions.map((c) => <small key={c}>{c}</small>)}
   </a>
 ))}
-{site.gift_card.available && <a href={site.gift_card.url}>Offrir une prestation</a>}
-{site.gift_card.available && <a href={beautygo.giftCardUrl(site, { serviceId })}>Offrir celle-ci</a>}
+{site.gift_card.available && <a href={site.gift_card.url}>Gift a service</a>}
+{site.gift_card.available && <a href={beautygo.giftCardUrl(site, { serviceId })}>Gift this one</a>}
 ```
 
-## 3. Les fonctions
+## 3. The functions
 
-| Fonction | Ce qu'elle rend |
+| Function | What it returns |
 |---|---|
 | `site()` | `provider`, `services`, `products`, `portfolio`, `reviews`, `offers`, `gift_card`, `shop`, `booking` |
-| `products()` | les articles en vente (la même liste que `site().products`) |
-| `hours()` | les horaires de la semaine (une pro) |
-| `slots({ days })`, `slots({ date })` ou `slots({ from, to })` | les créneaux libres des prochains jours à partir d'aujourd'hui au fuseau du salon, d'un jour, ou d'une plage (31 jours au plus) ; `serviceId` cale la durée (obligatoire pour un salon) |
-| `bookingUrl(site, { serviceId, slot, venue, products })` | l'adresse de ton bouton « Réserver » : la réservation s'ouvre sur cette prestation (sans prestation, au choix de la prestation), sur ce créneau si tu le passes, à ce lieu (`'salon'` ou `'home'`) quand la prestation s'y fait, avec ces produits si tu en passes ; `null` si la réservation est fermée |
-| `giftCardUrl(site, { serviceId })` | l'adresse de « Offrir cette prestation » : sa page de cartes cadeaux, cette prestation cochée ; `null` si elle ne vend pas de carte cadeau |
-| `cart(site)` | un panier pour ton site : `add`, `set`, `remove`, `clear`, `items`, `count`, `totals`, `subscribe`, `refresh(site)`, `checkoutUrl()` |
-| `checkoutUrl(site, articles, { serviceId, slot, venue })` | l'adresse de ton bouton « Payer » : la commande s'ouvre dans BeautyGo, ces articles dedans ; `null` si rien ne s'achète |
+| `products()` | the products on sale (the same list as `site().products`) |
+| `hours()` | the weekly opening hours (a pro) |
+| `slots({ days })`, `slots({ date })` or `slots({ from, to })` | the free slots for the next days starting today in the salon's time zone, for one day, or for a range (31 days at most); `serviceId` sets the duration (required for a salon) |
+| `bookingUrl(site, { serviceId, slot, venue, products })` | the address of your "Book" button: booking opens on this service (without a service, on the service choice), on this slot if you pass it, at this venue (`'salon'` or `'home'`) when the service is offered there, with these products if you pass them; `null` if booking is closed |
+| `giftCardUrl(site, { serviceId })` | the address of "Gift this service": their gift card page, with this service selected; `null` if they do not sell gift cards |
+| `cart(site)` | a cart for your site: `add`, `set`, `remove`, `clear`, `items`, `count`, `totals`, `subscribe`, `refresh(site)`, `checkoutUrl()` |
+| `checkoutUrl(site, articles, { serviceId, slot, venue })` | the address of your "Pay" button: the order opens in BeautyGo with these products in it; `null` if nothing can be bought |
 
-Les types sont dans `src/index.d.ts`.
+The types are in `src/index.d.ts`.
 
-### La langue : une liste fermée
+### Language: a closed list
 
-BeautyGo répond en six langues, et pas une de plus : `fr`, `en`, `pt`, `es`, `de`, `it`. Le type
-`Locale` n'accepte que celles-là, et `LOCALES` les donne à l'exécution (pour ton menu des langues).
-Pour partir de ce que dit le navigateur, `resolveLocale` rend toujours une langue servie :
+BeautyGo answers in six languages, and no more: `fr`, `en`, `pt`, `es`, `de`, `it`. The
+`Locale` type only accepts those, and `LOCALES` gives them at runtime (for your language menu).
+To start from what the browser says, `resolveLocale` always returns a served language:
 
 ```js
 import { LOCALES, createBeautyGo, resolveLocale } from '@beautygo/site';
 
-const locale = resolveLocale(navigator.languages); // 'pt-BR' donne 'pt', 'nl' donne 'fr'
+const locale = resolveLocale(navigator.languages); // 'pt-BR' gives 'pt', 'nl' gives 'fr'
 const bg = createBeautyGo({ key: 'bgo_pk_…', locale });
-bg.locale; // la langue demandée
+bg.locale; // the requested language
 ```
 
-Les noms des prestations, les libellés de catégorie (`category_label`), les offres et les
-présentations arrivent dans cette langue.
+Service names, category labels (`category_label`), offers and
+descriptions arrive in that language.
 
-Les offres sont des phrases écrites par BeautyGo (« −10 % à votre 3ᵉ visite »). Elles vouvoient
-les clientes par défaut, comme un salon sur son site. Si tes textes tutoient, demande-les au même
-registre :
+Offers are sentences written by BeautyGo ("−10 % à votre 3ᵉ visite", French for "10 % off your
+3rd visit"). In languages with a formal and an informal "you", they address clients formally by
+default, like a salon on its website. If your texts use the informal form, ask for offers in the
+same register:
 
 ```js
-const bg = createBeautyGo({ key: 'bgo_pk_…', locale, register: 'informal' }); // « à ta 3ᵉ visite »
+const bg = createBeautyGo({ key: 'bgo_pk_…', locale, register: 'informal' }); // "à ta 3ᵉ visite"
 ```
 
-### Ce que tu n'as pas à écrire
+### What you do not have to write
 
-En faisant un vrai site avec le paquet, voici ce qu'on recodait à la main. C'est dedans.
+While building a real site with the package, these are the things we kept coding by hand. They are included.
 
-| Besoin | Dans le paquet |
+| Need | In the package |
 |---|---|
-| Une API occupée (429) ou une coupure d'une seconde | réessayé tout seul, deux fois, en suivant `Retry-After` ; `retries: 0` pour le couper |
-| « Aujourd'hui » au fuseau du salon, pas à celui de la visiteuse | `slots({ days: 14 })`, `venueDay(site)`, `provider.timezone` |
-| « Ouvert jusqu'à 19 h », « Ouvre demain à 9 h » | `openingStatus(hours, { timeZone: site.provider.timezone })` |
-| Le prochain créneau libre | `nextSlot(await bg.slots({ days: 14, serviceId }))` |
-| La photo d'une prestation, ses produits, ses offres | `service.photo_url`, `photosOf`, `productsOf`, `offersOf` |
-| « Au salon », « À domicile », ou les deux | `venues(site)` |
-| « 45 € », « de 110 € à 150 € », « 1 h 30 » | `priceOf`, `durationOf`, `formatPrice`, `formatDuration` |
-| Le nom lisible d'une catégorie | `service.category_label`, `service.sub_category_label`, `product.category_label` |
-| L'icône d'un réseau social | `provider.socials` : `[{ platform: 'instagram', url }]` |
+| A busy API (429) or a one-second outage | retried automatically, twice, following `Retry-After`; `retries: 0` turns it off |
+| "Today" in the salon's time zone, not the visitor's | `slots({ days: 14 })`, `venueDay(site)`, `provider.timezone` |
+| "Open until 7 pm", "Opens tomorrow at 9 am" | `openingStatus(hours, { timeZone: site.provider.timezone })` |
+| The next free slot | `nextSlot(await bg.slots({ days: 14, serviceId }))` |
+| A service's photo, products and offers | `service.photo_url`, `photosOf`, `productsOf`, `offersOf` |
+| "At the salon", "At home", or both | `venues(site)` |
+| "45 €", "from 110 € to 150 €", "1 h 30" | `priceOf`, `durationOf`, `formatPrice`, `formatDuration` |
+| The readable name of a category | `service.category_label`, `service.sub_category_label`, `product.category_label` |
+| A social network's icon | `provider.socials`: `[{ platform: 'instagram', url }]` |
 
 ```js
 import { formatDuration, formatPrice, openingStatus, priceOf, venues } from '@beautygo/site';
 
 const [site, hours] = await Promise.all([bg.site(), bg.hours()]);
 const etat = openingStatus(hours, { timeZone: site.provider.timezone });
-// { open: true, closesAt: '19:00' } ou { open: false, opensAt: '09:00', opensInDays: 1, opensOn: 'tuesday' }
+// { open: true, closesAt: '19:00' } or { open: false, opensAt: '09:00', opensInDays: 1, opensOn: 'tuesday' }
 
 for (const s of site.services) {
   const prix = priceOf(s); // { fixed, min, max, currency }
@@ -273,105 +277,105 @@ for (const s of site.services) {
 venues(site); // { salon: true, home: true }
 ```
 
-### Chaque bouton arrive au bon écran
+### Every button lands on the right screen
 
-La visiteuse choisit sur TON site ; BeautyGo ne s'ouvre qu'au dernier pas, déjà rempli. Ne l'envoie
-jamais sur la fiche en lui laissant tout refaire.
+The visitor makes their choices on YOUR site. BeautyGo only opens at the last step, already filled in. Never send
+them to the profile and make them start over.
 
-| Ton bouton | L'adresse | Ce qui s'ouvre dans BeautyGo |
+| Your button | The address | What opens in BeautyGo |
 |---|---|---|
-| « Réserver » sur une prestation | `bookingUrl(site, { serviceId })` | la réservation, cette prestation choisie |
-| « Réserver » après un créneau | `bookingUrl(site, { serviceId, slot })` | la même, sur ce jour et cette heure |
-| « Réserver » à domicile ou au salon | `bookingUrl(site, { serviceId, slot, venue: 'home' })` | la même, ce lieu choisi (si la prestation s'y fait) |
-| « Réserver » avec des produits | `bookingUrl(site, { serviceId, slot, products })` | le même rendez-vous, ses produits dedans |
-| « Réserver » général (en-tête, pied de page) | `bookingUrl(site)` | la réservation, au choix de la prestation |
-| « Payer » le panier | `cart.checkoutUrl()` | la commande, les articles dedans |
-| « En profiter » sur une offre | ton agenda d'abord (`offersOf`, `slot.discount_percent`), puis `bookingUrl` ; ou `offer.booking_url` | la prestation de l'offre, ou l'écran de parrainage |
-| « Offrir » | `site.gift_card.url` | sa page de cartes cadeaux |
-| « Offrir cette prestation » | `giftCardUrl(site, { serviceId })` | la même page, cette prestation cochée |
-| « Voir les avis » | `provider.reviews_url` | ses avis (une pro ou un salon) |
-| « Écrire » | `provider.contact_url` | la discussion avec elle (la conversation du salon) |
-| « Voir la fiche » | `provider.profile_url` | sa fiche |
-| Un produit | `product.product_url` | la fiche du produit |
+| "Book" on a service | `bookingUrl(site, { serviceId })` | booking, with this service selected |
+| "Book" after picking a slot | `bookingUrl(site, { serviceId, slot })` | the same, on this day and time |
+| "Book" at home or at the salon | `bookingUrl(site, { serviceId, slot, venue: 'home' })` | the same, with this venue selected (if the service is offered there) |
+| "Book" with products | `bookingUrl(site, { serviceId, slot, products })` | the same appointment, with its products |
+| General "Book" (header, footer) | `bookingUrl(site)` | booking, on the service choice |
+| "Pay" for the cart | `cart.checkoutUrl()` | the order, with the products in it |
+| "Get the offer" on an offer | your own calendar first (`offersOf`, `slot.discount_percent`), then `bookingUrl`; or `offer.booking_url` | the offer's service, or the referral screen |
+| "Gift" | `site.gift_card.url` | their gift card page |
+| "Gift this service" | `giftCardUrl(site, { serviceId })` | the same page, with this service selected |
+| "See reviews" | `provider.reviews_url` | their reviews (a pro or a salon) |
+| "Message" | `provider.contact_url` | the conversation with them (the salon's conversation) |
+| "See profile" | `provider.profile_url` | their profile |
+| A product | `product.product_url` | the product page |
 
-`bookingUrl(site)` sans prestation ouvre la réservation au choix de la prestation (un salon : sa
-liste de prestations, ou le tunnel quand il n'en a qu'une). Mieux encore : laisse la visiteuse
-choisir sa prestation et son créneau sur TON site, puis `bookingUrl(site, { serviceId, slot })`.
+`bookingUrl(site)` without a service opens booking on the service choice (for a salon: its
+list of services, or the booking flow when it has only one). Even better: let the visitor
+choose their service and slot on YOUR site, then use `bookingUrl(site, { serviceId, slot })`.
 
-## 4. Sans le paquet
+## 4. Without the package
 
-C'est une API HTTP ordinaire. La clé va dans un en-tête, jamais dans l'adresse.
+It is a plain HTTP API. The key goes in a header, never in the URL.
 
 ```bash
 curl -H "X-BeautyGo-Key: bgo_pk_…" https://api-beautygo.technas.fr/v1/site
 ```
 
-| Route | Paramètres |
+| Route | Parameters |
 |---|---|
-| `GET /v1/site` | aucun (les articles et `shop.cart_url` y sont) |
-| `GET /v1/site/hours` | aucun |
-| `GET /v1/site/slots` | `days=14` (à partir d'aujourd'hui au fuseau du salon), ou `date=AAAA-MM-JJ`, ou `from` et `to` ; `service_id` (obligatoire pour un salon) |
+| `GET /v1/site` | none (products and `shop.cart_url` are included) |
+| `GET /v1/site/hours` | none |
+| `GET /v1/site/slots` | `days=14` (starting today in the salon's time zone), or `date=YYYY-MM-DD`, or `from` and `to`; `service_id` (required for a salon) |
 
-« Payer » sans le paquet : ajoute `articles=<id>:<quantité>,<id>:<quantité>` à `shop.cart_url`
-(60 lignes et 99 par ligne au plus). Avec `reserver=<prestation>` en plus (le `booking_url`
-d'une prestation), la prestation et ses produits partent sur le même rendez-vous.
+"Pay" without the package: add `articles=<id>:<quantity>,<id>:<quantity>` to `shop.cart_url`
+(60 lines at most, and 99 per line at most). With `reserver=<service>` as well (a service's
+`booking_url`), the service and its products go on the same appointment.
 
-Les paramètres que BeautyGo lit sur ses adresses (ce que le paquet écrit pour toi) :
+The parameters BeautyGo reads on its addresses (what the package writes for you):
 
-| Paramètre | Sur | Ce qui s'ouvre |
+| Parameter | On | What opens |
 |---|---|---|
-| `reserver=<prestation>` | sa fiche, la page du salon | la réservation sur cette prestation |
-| `reserver=1` | sa fiche, la page du salon | la réservation, au choix de la prestation |
-| `jour=AAAA-MM-JJ&heure=HH:MM` | avec `reserver=<prestation>` | ce créneau, coché s'il est encore libre |
-| `lieu=salon` ou `lieu=domicile` | avec `reserver=` (une pro) | ce lieu, si la prestation s'y fait |
-| `articles=<id>:<quantité>,…` | sa fiche, la page du salon | la commande, ces produits dedans |
-| `ecrire=1` | sa fiche, la page du salon | la discussion (connexion d'abord sans compte) |
-| `avis=1` | sa fiche, la page du salon | ses avis |
-| `prestation=<id>` | sa page « Offrir » (`gift_card.url`) | cette prestation cochée |
+| `reserver=<service>` | their profile, the salon's page | booking on this service |
+| `reserver=1` | their profile, the salon's page | booking, on the service choice |
+| `jour=YYYY-MM-DD&heure=HH:MM` | with `reserver=<service>` | this slot, selected if it is still free |
+| `lieu=salon` or `lieu=domicile` | with `reserver=` (a pro) | this venue, if the service is offered there |
+| `articles=<id>:<quantity>,…` | their profile, the salon's page | the order, with these products in it |
+| `ecrire=1` | their profile, the salon's page | the conversation (sign-in first without an account) |
+| `avis=1` | their profile, the salon's page | their reviews |
+| `prestation=<id>` | their "Gift" page (`gift_card.url`) | this service selected |
 
-Chacun ne sert qu'une fois : revenue sur la fiche, la visiteuse n'y retombe pas. Une valeur
-inconnue (une prestation retirée, `lieu=plage`) ne fait rien : la fiche s'affiche normalement.
+Each one is used only once: when the visitor comes back to the profile, they do not land there again. An unknown
+value (a removed service, `lieu=plage`) does nothing: the profile shows normally.
 
-## 5. Les erreurs
+## 5. Errors
 
-Chaque refus rend `{ "code", "message" }`. Le paquet lève une `BeautyGoError` avec `status`
-et `code`.
+Every rejection returns `{ "code", "message" }`. The package throws a `BeautyGoError` with `status`
+and `code`.
 
-| Code | Ce qui se passe |
+| Code | What happens |
 |---|---|
-| `missing_key`, `unknown_key` (401) | la clé manque, ou le site a été retiré ou remplacé |
-| `origin_not_allowed` (403) | le navigateur n'est pas sur le domaine relié |
-| `site_not_found` (404) | le compte de la pro est fermé, ou le salon n'est plus publié |
-| `bad_request` (400) | paramètres des créneaux à revoir |
-| `service_required` (400) | un salon : passe `serviceId` à `slots()` |
-| `no_salon_hours` (404) | un salon n'a pas d'horaires à lui |
-| `rate_limited` (429) | trop d'appels : le paquet a déjà réessayé deux fois ; mets les pages en cache |
-| `unavailable` (503) | BeautyGo ne répond pas : le paquet a déjà réessayé |
-| `network_error` | pas de réseau, ou l'appel a été annulé (`error.cause`) |
+| `missing_key`, `unknown_key` (401) | the key is missing, or the site was removed or replaced |
+| `origin_not_allowed` (403) | the browser is not on the linked domain |
+| `site_not_found` (404) | the pro's account is closed, or the salon is no longer published |
+| `bad_request` (400) | the slot parameters need fixing |
+| `service_required` (400) | a salon: pass `serviceId` to `slots()` |
+| `no_salon_hours` (404) | a salon has no hours of its own |
+| `rate_limited` (429) | too many calls: the package already retried twice; cache your pages |
+| `unavailable` (503) | BeautyGo is not responding: the package already retried |
+| `network_error` | no network, or the call was aborted (`error.cause`) |
 
-Le site ne perd jamais de contenu. Quand la réservation se ferme, tout continue de
-s'afficher : `booking.available` passe à `false`, les `booking_url` à `null`, et
-`booking.reason` dit pourquoi :
+The site never loses content. When booking closes, everything keeps
+displaying: `booking.available` becomes `false`, the `booking_url` values become `null`, and
+`booking.reason` says why:
 
-- `paused` : la pro ou le salon fait une pause. Écris par exemple « Réservations en pause » ;
-- `closed` : sa formule (ou l'abonnement du salon) ne couvre plus la réservation en ligne.
-  Écris par exemple « Réservez par téléphone ».
+- `paused`: the pro or the salon is taking a break. Write for example "Bookings paused";
+- `closed`: their plan (or the salon's subscription) no longer covers online booking.
+  Write for example "Book by phone".
 
-## 6. Avec un assistant de code
+## 6. With a coding assistant
 
-Le paquet embarque un skill, `skills/site-de-salon/SKILL.md` : la marche à suivre pour qu'un assistant
-de code fasse le site d'un salon du premier coup. Il dit quoi décider avant d'écrire
-(logo, une seule couleur, ton), quelle donnée nourrit quelle section, où mène chaque bouton, et quoi
-vérifier avant de dire « fini ».
+The package ships a skill, `skills/site-de-salon/SKILL.md`: the steps a coding assistant
+follows to build a salon's website right the first time. It says what to decide before writing
+(logo, a single color, tone), which data feeds which section, where each button leads, and what to
+check before saying "done".
 
 ```bash
-# Copie le dossier là où ton assistant de code lit ses skills :
-cp -R node_modules/@beautygo/site/skills/site-de-salon <dossier-des-skills>/
+# Copy the folder to where your coding assistant reads its skills:
+cp -R node_modules/@beautygo/site/skills/site-de-salon <skills-folder>/
 ```
 
-Puis : « Fais le site de mon salon avec le paquet @beautygo/site et le skill site-de-salon. »
-Le site obtenu en le suivant : https://beautygo.fr/demo/studio-azur/
+Then: "Build my salon's website with the @beautygo/site package and the site-de-salon skill."
+The site you get by following it: https://beautygo.fr/demo/studio-azur/
 
-## 7. Ce qui ne change pas
+## 7. What does not change
 
-`/v1` n'ajoute que des champs. Un champ n'est ni retiré ni renommé sans une `/v2`.
+`/v1` only adds fields. A field is never removed or renamed without a `/v2`.
